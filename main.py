@@ -1,4 +1,6 @@
 # main.py
+import os
+import subprocess
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
@@ -63,3 +65,12 @@ async def api_update_component(request: ComponentUpdateRequest):
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Portfolio API!"}
+
+@app.get("/project/")
+async def clone_project():
+    repo_url = "https://github.com/Harsh-deepsingh/Templates-.git"
+    try:
+        result = subprocess.run(["git", "clone", repo_url], check=True, text=True, capture_output=True)
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print("Error cloning repository:", e.stderr)
