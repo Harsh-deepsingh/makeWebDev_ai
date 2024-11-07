@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from portfolio_builder import fill_data, update_component
+from upload_s3 import upload_folder_to_s3
 
 app = FastAPI()
 
@@ -74,3 +75,12 @@ async def clone_project():
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print("Error cloning repository:", e.stderr)
+        
+@app.get('/upload/')
+async def upload():
+    try:
+        result = upload_folder_to_s3('Templates-', 'makewebev')
+        print(result)
+    except:
+        print("error uploading to s3: ")
+        
